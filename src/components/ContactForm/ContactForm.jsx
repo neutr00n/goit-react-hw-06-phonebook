@@ -1,6 +1,7 @@
 import { Formik, ErrorMessage } from 'formik';
 import * as yup from 'yup';
-import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
+import { setContacts, getContacts } from 'redux/phoneBookSlice';
 import { nanoid } from 'nanoid';
 import {
   ContForm,
@@ -22,11 +23,30 @@ const schema = yup.object().shape({
 
 const initialValues = { name: '', number: '' };
 
-export const ContactForm = ({ handleFormSubmit }) => {
+export const ContactForm = () => {
+  const contacts = useSelector(getContacts);
+  const dispatch = useDispatch();
+
   const onFormSubmit = (values, { resetForm }) => {
     const contact = { id: nanoid(), ...values };
-    handleFormSubmit(contact);
+
+    const isAdded = checkContactIsAdded(contact);
+
+    if (isAdded) {
+      return alert(`${contact.name} is already in contacts`);
+    }
+
+    dispatch(setContacts(contact));
+
     resetForm();
+  };
+
+  const checkContactIsAdded = ({ name }) => {
+    const normalizedContactName = name.toLowerCase().trim();
+
+    return contacts.find(
+      ({ name }) => name.toLowerCase().trim() === normalizedContactName
+    );
   };
 
   return (
@@ -56,8 +76,4 @@ export const ContactForm = ({ handleFormSubmit }) => {
       </ContForm>
     </Formik>
   );
-};
-
-ContactForm.propTypes = {
-  handleFormSubmit: PropTypes.func.isRequired,
 };

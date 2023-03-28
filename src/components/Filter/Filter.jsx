@@ -1,7 +1,15 @@
-import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
+import { setFilter, getFilter } from 'redux/phoneBookSlice';
 import { FilterWrapper, FilterTitle, FilterInput } from './Filter.styled';
 
-export const Filter = ({ handleFilterValue, value }) => {
+export const Filter = () => {
+  const filteredContacts = useSelector(getFilter);
+  const dispatch = useDispatch();
+
+  const handleFilterValue = ({ target }) => {
+    dispatch(setFilter(target.value));
+  };
+
   return (
     <FilterWrapper>
       <FilterTitle>Find contacts by name</FilterTitle>
@@ -9,14 +17,9 @@ export const Filter = ({ handleFilterValue, value }) => {
         type="text"
         name="filter"
         placeholder="Rosie Simpson"
-        value={value}
+        value={filteredContacts}
         onChange={handleFilterValue}
       />
     </FilterWrapper>
   );
-};
-
-Filter.propTypes = {
-  handleFilterValue: PropTypes.func.isRequired,
-  value: PropTypes.string,
 };

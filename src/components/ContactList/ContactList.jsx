@@ -1,26 +1,17 @@
-import PropTypes from 'prop-types';
 import { Contact } from '../Contact/Contact';
 import { ContactItem } from './ContactList.styled';
+import { DisplayedContacts } from '../../helpers/displayedContacts';
 
-export const ContactList = ({ contacts, handleRemoveContact }) => {
+export const ContactList = () => {
+  const displayedContacts = DisplayedContacts();
+
   return (
     <ul>
-      {contacts.map(({ id, name, number }, index) => (
+      {displayedContacts.map(({ id, name, number }, index) => (
         <ContactItem key={id}>
-          <Contact
-            name={name}
-            number={number}
-            handleRemoveContact={handleRemoveContact}
-            id={id}
-            index={index}
-          />
+          <Contact name={name} number={number} id={id} index={index} />
         </ContactItem>
       ))}
     </ul>
   );
-};
-
-ContactList.propTypes = {
-  contacts: PropTypes.arrayOf(PropTypes.object).isRequired,
-  handleRemoveContact: PropTypes.func.isRequired,
 };
